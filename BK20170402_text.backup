@@ -1,0 +1,703 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.3.13
+-- Dumped by pg_dump version 9.3.13
+-- Started on 2017-04-02 23:00:27
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 1 (class 3079 OID 11750)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2078 (class 0 OID 0)
+-- Dependencies: 1
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- TOC entry 171 (class 1259 OID 67673)
+-- Name: access_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE access_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.access_seq OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 172 (class 1259 OID 67675)
+-- Name: access; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE access (
+    id integer DEFAULT nextval('access_seq'::regclass) NOT NULL,
+    key character varying(40) DEFAULT ''::character varying NOT NULL,
+    controller character varying(50) DEFAULT ''::character varying NOT NULL,
+    date_created timestamp(0) without time zone DEFAULT NULL::timestamp without time zone,
+    date_modified timestamp(0) without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT access_id_check CHECK ((id > 0))
+);
+
+
+ALTER TABLE public.access OWNER TO postgres;
+
+--
+-- TOC entry 183 (class 1259 OID 67773)
+-- Name: groups_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE groups_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.groups_seq OWNER TO postgres;
+
+--
+-- TOC entry 184 (class 1259 OID 67775)
+-- Name: groups; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE groups (
+    id integer DEFAULT nextval('groups_seq'::regclass) NOT NULL,
+    name character varying(20) NOT NULL,
+    description character varying(100) NOT NULL,
+    CONSTRAINT groups_id_check CHECK ((id > 0))
+);
+
+
+ALTER TABLE public.groups OWNER TO postgres;
+
+--
+-- TOC entry 173 (class 1259 OID 67686)
+-- Name: keys_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE keys_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.keys_seq OWNER TO postgres;
+
+--
+-- TOC entry 174 (class 1259 OID 67688)
+-- Name: keys; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE keys (
+    id integer DEFAULT nextval('keys_seq'::regclass) NOT NULL,
+    key character varying(40) NOT NULL,
+    level integer NOT NULL,
+    ignore_limits smallint DEFAULT 0::smallint NOT NULL,
+    is_private_key smallint DEFAULT 0::smallint NOT NULL,
+    ip_addresses text,
+    date_created integer NOT NULL
+);
+
+
+ALTER TABLE public.keys OWNER TO postgres;
+
+--
+-- TOC entry 175 (class 1259 OID 67699)
+-- Name: limits_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE limits_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.limits_seq OWNER TO postgres;
+
+--
+-- TOC entry 176 (class 1259 OID 67701)
+-- Name: limits; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE limits (
+    id integer DEFAULT nextval('limits_seq'::regclass) NOT NULL,
+    uri character varying(255) NOT NULL,
+    count integer NOT NULL,
+    hour_started integer NOT NULL,
+    api_key character varying(40) NOT NULL
+);
+
+
+ALTER TABLE public.limits OWNER TO postgres;
+
+--
+-- TOC entry 189 (class 1259 OID 67831)
+-- Name: login_attempts_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE login_attempts_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.login_attempts_seq OWNER TO postgres;
+
+--
+-- TOC entry 190 (class 1259 OID 67833)
+-- Name: login_attempts; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE login_attempts (
+    id integer DEFAULT nextval('login_attempts_seq'::regclass) NOT NULL,
+    ip_address character varying(15) NOT NULL,
+    login character varying(100) NOT NULL,
+    "time" integer,
+    CONSTRAINT login_attempts_id_check CHECK ((id > 0)),
+    CONSTRAINT login_attempts_time_check CHECK (("time" > 0))
+);
+
+
+ALTER TABLE public.login_attempts OWNER TO postgres;
+
+--
+-- TOC entry 177 (class 1259 OID 67707)
+-- Name: logs_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE logs_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.logs_seq OWNER TO postgres;
+
+--
+-- TOC entry 178 (class 1259 OID 67709)
+-- Name: logs; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE logs (
+    id integer DEFAULT nextval('logs_seq'::regclass) NOT NULL,
+    uri character varying(255) NOT NULL,
+    method character varying(6) NOT NULL,
+    params text,
+    api_key character varying(40) NOT NULL,
+    ip_address character varying(45) NOT NULL,
+    "time" integer NOT NULL,
+    rtime double precision,
+    authorized smallint NOT NULL
+);
+
+
+ALTER TABLE public.logs OWNER TO postgres;
+
+--
+-- TOC entry 179 (class 1259 OID 67718)
+-- Name: messages_api_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE messages_api_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.messages_api_seq OWNER TO postgres;
+
+--
+-- TOC entry 180 (class 1259 OID 67720)
+-- Name: messages_api; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE messages_api (
+    id integer DEFAULT nextval('messages_api_seq'::regclass) NOT NULL,
+    user_id integer NOT NULL,
+    content_message character varying(200) NOT NULL,
+    date_message timestamp(0) without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.messages_api OWNER TO postgres;
+
+--
+-- TOC entry 185 (class 1259 OID 67782)
+-- Name: users_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE users_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_seq OWNER TO postgres;
+
+--
+-- TOC entry 186 (class 1259 OID 67784)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE users (
+    id integer DEFAULT nextval('users_seq'::regclass) NOT NULL,
+    ip_address character varying(15) NOT NULL,
+    username character varying(100) NOT NULL,
+    password character varying(255) NOT NULL,
+    salt character varying(255) DEFAULT NULL::character varying,
+    email character varying(100) NOT NULL,
+    activation_code character varying(40) DEFAULT NULL::character varying,
+    forgotten_password_code character varying(40) DEFAULT NULL::character varying,
+    forgotten_password_time integer,
+    remember_code character varying(40) DEFAULT NULL::character varying,
+    created_on integer NOT NULL,
+    last_login integer,
+    active smallint,
+    first_name character varying(50) DEFAULT NULL::character varying,
+    last_name character varying(50) DEFAULT NULL::character varying,
+    company character varying(100) DEFAULT NULL::character varying,
+    phone character varying(20) DEFAULT NULL::character varying,
+    CONSTRAINT users_active_check CHECK ((active > 0)),
+    CONSTRAINT users_created_on_check CHECK ((created_on > 0)),
+    CONSTRAINT users_forgotten_password_time_check CHECK ((forgotten_password_time > 0)),
+    CONSTRAINT users_id_check CHECK ((id > 0)),
+    CONSTRAINT users_last_login_check CHECK ((last_login > 0))
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- TOC entry 181 (class 1259 OID 67727)
+-- Name: users_api_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE users_api_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_api_seq OWNER TO postgres;
+
+--
+-- TOC entry 182 (class 1259 OID 67729)
+-- Name: users_api; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE users_api (
+    id integer DEFAULT nextval('users_api_seq'::regclass) NOT NULL,
+    username character varying(100) NOT NULL,
+    password character varying(100) NOT NULL,
+    register_date timestamp(0) without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.users_api OWNER TO postgres;
+
+--
+-- TOC entry 187 (class 1259 OID 67806)
+-- Name: users_groups_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE users_groups_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_groups_seq OWNER TO postgres;
+
+--
+-- TOC entry 188 (class 1259 OID 67808)
+-- Name: users_groups; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE users_groups (
+    id integer DEFAULT nextval('users_groups_seq'::regclass) NOT NULL,
+    user_id integer NOT NULL,
+    group_id integer NOT NULL,
+    CONSTRAINT users_groups_group_id_check CHECK ((group_id > 0)),
+    CONSTRAINT users_groups_id_check CHECK ((id > 0)),
+    CONSTRAINT users_groups_user_id_check CHECK ((user_id > 0))
+);
+
+
+ALTER TABLE public.users_groups OWNER TO postgres;
+
+--
+-- TOC entry 2052 (class 0 OID 67675)
+-- Dependencies: 172
+-- Data for Name: access; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2079 (class 0 OID 0)
+-- Dependencies: 171
+-- Name: access_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('access_seq', 2, false);
+
+
+--
+-- TOC entry 2064 (class 0 OID 67775)
+-- Dependencies: 184
+-- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO groups (id, name, description) VALUES (1, 'admin', 'Administrator');
+INSERT INTO groups (id, name, description) VALUES (2, 'members', 'General User');
+
+
+--
+-- TOC entry 2080 (class 0 OID 0)
+-- Dependencies: 183
+-- Name: groups_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('groups_seq', 1, false);
+
+
+--
+-- TOC entry 2054 (class 0 OID 67688)
+-- Dependencies: 174
+-- Data for Name: keys; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2081 (class 0 OID 0)
+-- Dependencies: 173
+-- Name: keys_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('keys_seq', 2, false);
+
+
+--
+-- TOC entry 2056 (class 0 OID 67701)
+-- Dependencies: 176
+-- Data for Name: limits; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2082 (class 0 OID 0)
+-- Dependencies: 175
+-- Name: limits_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('limits_seq', 1, false);
+
+
+--
+-- TOC entry 2070 (class 0 OID 67833)
+-- Dependencies: 190
+-- Data for Name: login_attempts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2083 (class 0 OID 0)
+-- Dependencies: 189
+-- Name: login_attempts_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('login_attempts_seq', 1, false);
+
+
+--
+-- TOC entry 2058 (class 0 OID 67709)
+-- Dependencies: 178
+-- Data for Name: logs; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2084 (class 0 OID 0)
+-- Dependencies: 177
+-- Name: logs_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('logs_seq', 1, false);
+
+
+--
+-- TOC entry 2060 (class 0 OID 67720)
+-- Dependencies: 180
+-- Data for Name: messages_api; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2085 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: messages_api_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('messages_api_seq', 7, false);
+
+
+--
+-- TOC entry 2066 (class 0 OID 67784)
+-- Dependencies: 186
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO users (id, ip_address, username, password, salt, email, activation_code, forgotten_password_code, forgotten_password_time, remember_code, created_on, last_login, active, first_name, last_name, company, phone) VALUES (2, '::1', 'member member', '$2y$08$9ffCw14YVai4CkNz4kslSeVFQW0eU6LKtX4WPbqo0WwNSLaWFdL6a', NULL, 'member@mail.com', NULL, NULL, NULL, NULL, 1491183632, NULL, 1, 'member', 'member', 'member', '1234');
+INSERT INTO users (id, ip_address, username, password, salt, email, activation_code, forgotten_password_code, forgotten_password_time, remember_code, created_on, last_login, active, first_name, last_name, company, phone) VALUES (3, '::1', 'member member1', '$2y$08$dhokzPsDKpfhkeCRTPgv2.ZekXOexD2i5Bf1.2LkBWSw4Gi7wXSha', NULL, 'member123@mail.com', NULL, NULL, NULL, NULL, 1491183687, NULL, 1, 'member', 'member', 'member', '1234');
+INSERT INTO users (id, ip_address, username, password, salt, email, activation_code, forgotten_password_code, forgotten_password_time, remember_code, created_on, last_login, active, first_name, last_name, company, phone) VALUES (4, '::1', 'member member2', '$2y$08$5NyzF4bb3T1ovL.DfN05yu1f8ZtpsLFyhCxoUy7DHBnfVYNFhtrOe', NULL, 'membertest@mail.com', NULL, NULL, NULL, NULL, 1491183738, NULL, 1, 'member', 'member', 'member', '68');
+INSERT INTO users (id, ip_address, username, password, salt, email, activation_code, forgotten_password_code, forgotten_password_time, remember_code, created_on, last_login, active, first_name, last_name, company, phone) VALUES (5, '::1', '1 2', '$2y$08$ohdTQC6go8nrV1aTMwqasO8oSt.oCJ12Q8BCKsyzBW2dAGZLyd5C6', NULL, 'member2@mail.com', NULL, NULL, NULL, NULL, 1491183779, 1491183913, 1, '1', '2', '3', '78');
+INSERT INTO users (id, ip_address, username, password, salt, email, activation_code, forgotten_password_code, forgotten_password_time, remember_code, created_on, last_login, active, first_name, last_name, company, phone) VALUES (1, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', '', NULL, NULL, '4qrR.iz/P07CGNqPd7wNUe', 1268889823, 1491194835, 1, 'Admin', 'istrator', 'ADMIN', '0');
+
+
+--
+-- TOC entry 2062 (class 0 OID 67729)
+-- Dependencies: 182
+-- Data for Name: users_api; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2086 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: users_api_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('users_api_seq', 11, false);
+
+
+--
+-- TOC entry 2068 (class 0 OID 67808)
+-- Dependencies: 188
+-- Data for Name: users_groups; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO users_groups (id, user_id, group_id) VALUES (1, 1, 1);
+INSERT INTO users_groups (id, user_id, group_id) VALUES (2, 1, 2);
+INSERT INTO users_groups (id, user_id, group_id) VALUES (3, 4, 2);
+INSERT INTO users_groups (id, user_id, group_id) VALUES (4, 5, 2);
+
+
+--
+-- TOC entry 2087 (class 0 OID 0)
+-- Dependencies: 187
+-- Name: users_groups_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('users_groups_seq', 4, true);
+
+
+--
+-- TOC entry 2088 (class 0 OID 0)
+-- Dependencies: 185
+-- Name: users_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('users_seq', 5, true);
+
+
+--
+-- TOC entry 1919 (class 2606 OID 67685)
+-- Name: access_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY access
+    ADD CONSTRAINT access_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1931 (class 2606 OID 67781)
+-- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1921 (class 2606 OID 67698)
+-- Name: keys_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY keys
+    ADD CONSTRAINT keys_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1923 (class 2606 OID 67706)
+-- Name: limits_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY limits
+    ADD CONSTRAINT limits_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1941 (class 2606 OID 67840)
+-- Name: login_attempts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY login_attempts
+    ADD CONSTRAINT login_attempts_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1925 (class 2606 OID 67717)
+-- Name: logs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY logs
+    ADD CONSTRAINT logs_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1927 (class 2606 OID 67726)
+-- Name: messages_api_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY messages_api
+    ADD CONSTRAINT messages_api_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1937 (class 2606 OID 67818)
+-- Name: uc_users_groups; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY users_groups
+    ADD CONSTRAINT uc_users_groups UNIQUE (user_id, group_id);
+
+
+--
+-- TOC entry 1929 (class 2606 OID 67735)
+-- Name: users_api_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY users_api
+    ADD CONSTRAINT users_api_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1939 (class 2606 OID 67816)
+-- Name: users_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY users_groups
+    ADD CONSTRAINT users_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1933 (class 2606 OID 67805)
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1934 (class 1259 OID 67830)
+-- Name: fk_users_groups_groups1_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX fk_users_groups_groups1_idx ON users_groups USING btree (group_id);
+
+
+--
+-- TOC entry 1935 (class 1259 OID 67829)
+-- Name: fk_users_groups_users1_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX fk_users_groups_users1_idx ON users_groups USING btree (user_id);
+
+
+--
+-- TOC entry 1943 (class 2606 OID 67824)
+-- Name: fk_users_groups_groups1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY users_groups
+    ADD CONSTRAINT fk_users_groups_groups1 FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 1942 (class 2606 OID 67819)
+-- Name: fk_users_groups_users1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY users_groups
+    ADD CONSTRAINT fk_users_groups_users1 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 2077 (class 0 OID 0)
+-- Dependencies: 6
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2017-04-02 23:00:28
+
+--
+-- PostgreSQL database dump complete
+--
+
