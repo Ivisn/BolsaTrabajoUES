@@ -47,12 +47,28 @@ class Home extends CI_Controller
 			redirect('auth/login', 'refresh');
 		}
 		
+		//Obteniendo usuario
+		$user = $this->ion_auth->user()->row();
+		$usuario= $user->email;
 
-			$titulo= array('titulo' => 'Buscando Trabajo' );
-		$this->load->view("guest/head",$titulo);
-		$this->load->view("guest/nav",$titulo);
-		$this->load->view("home",$titulo);
-		$this->load->view("guest/footer",$titulo);
+		//obteniendo grupo
+		if ($this->ion_auth->in_group("admin"))
+    		{
+ 				$titulo= array('titulo' => 'Buscando Trabajo','usuario'=>$usuario );
+				$this->load->view("guest/head",$titulo);
+				$this->load->view("guest/nav",$titulo);
+				$this->load->view("home",$titulo);
+				$this->load->view("guest/footer",$titulo);
+    		}
+    	elseif($this->ion_auth->in_group("members"))
+    	{
+    		$titulo= array('titulo' => 'Buscando Trabajo','usuario'=>$usuario );
+				$this->load->view("guest/head",$titulo);
+				$this->load->view("guest/nav_members",$titulo);
+				$this->load->view("home",$titulo);
+				$this->load->view("guest/footer",$titulo);
+    	}
+
 	}
 
 

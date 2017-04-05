@@ -39,8 +39,14 @@ class Auth extends CI_Controller {
 			{
 				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
 			}
-
 			$this->_render_page('auth/index', $this->data);
+			$user = $this->ion_auth->user()->row();
+			$usuario= $user->email;
+			$titulo= array('titulo' => 'Administrar usuarios','usuario'=>$usuario );
+			$this->load->view("guest/head",$titulo);
+			$this->load->view("guest/nav",$titulo);
+			
+			$this->load->view("guest/footer",$titulo);
 		}
 	}
 
@@ -468,6 +474,8 @@ class Auth extends CI_Controller {
 				'name'  => 'first_name',
 				'id'    => 'first_name',
 				'type'  => 'text',
+				'class'		=> 'form-control',
+				'placeholder' => 'Nombres',
 				'value' => $this->form_validation->set_value('first_name'),
 			);
 			$this->data['last_name'] = array(
@@ -475,39 +483,58 @@ class Auth extends CI_Controller {
 				'id'    => 'last_name',
 				'type'  => 'text',
 				'value' => $this->form_validation->set_value('last_name'),
+				'class'		=> 'form-control',
+				'placeholder' => 'Apellidos',
 			);
 			$this->data['email'] = array(
 				'name'  => 'email',
 				'id'    => 'email',
 				'type'  => 'text',
+				'class'		=> 'form-control',
+				'placeholder' => 'Email',
 				'value' => $this->form_validation->set_value('email'),
 			);
 			$this->data['company'] = array(
 				'name'  => 'company',
 				'id'    => 'company',
 				'type'  => 'text',
+				'class'		=> 'form-control',
+				'placeholder' => 'Compañia',
 				'value' => $this->form_validation->set_value('company'),
 			);
 			$this->data['phone'] = array(
 				'name'  => 'phone',
 				'id'    => 'phone',
 				'type'  => 'text',
+				'class'		=> 'form-control',
+				'placeholder' => 'Telefono',
 				'value' => $this->form_validation->set_value('phone'),
 			);
 			$this->data['password'] = array(
 				'name'  => 'password',
 				'id'    => 'password',
 				'type'  => 'password',
+				'class'		=> 'form-control',
+				'placeholder' => 'Contraseña',
 				'value' => $this->form_validation->set_value('password'),
 			);
 			$this->data['password_confirm'] = array(
 				'name'  => 'password_confirm',
 				'id'    => 'password_confirm',
 				'type'  => 'password',
+				'class'		=> 'form-control',
+				'placeholder' => 'Confirme contraseña',
 				'value' => $this->form_validation->set_value('password_confirm'),
 			);
 
 			$this->_render_page('auth/create_user', $this->data);
+			$user = $this->ion_auth->user()->row();
+			$usuario= $user->email;
+			$titulo= array('titulo' => 'Administrar usuarios','usuario'=>$usuario );
+			$this->load->view("guest/head",$titulo);
+			$this->load->view("guest/nav",$titulo);
+			
+			$this->load->view("guest/footer",$titulo);
 		}
 	}
 

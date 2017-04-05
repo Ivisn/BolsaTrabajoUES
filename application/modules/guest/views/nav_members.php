@@ -26,9 +26,8 @@
 				        <div class="randompad">
 				           <fieldset>
 				           <li class="smoothScroll" style="text-align: center; !important"> <?=$usuario?></li>
-				             <a style="color: white" href="<?=base_url()?>auth/logout"><li>Cerrar sesión</li></a>
-				              <a style="color: white" href="<?=base_url()?>auth/forgot_password"><li>Cambiar contraseña</li></a>
-				              <a style="color: white" href="<?=base_url()?>auth/index"><li>Gestión de usuarios</li></a>
+				             <a href="<?=base_url()?>auth/logout"><li>Cerrar sesión</li></a>
+				              <a href="<?=base_url()?>auth/forgot_password"<li>Cambiar contraseña</li></a>
 				           </fieldset>
 				        </div>
 				      </div>
@@ -39,3 +38,16 @@
 	</div>
 </div>	
 
+<!-- home section -->
+<div id="home">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-offset-6 col-md-6 col-sm-offset-6 col-sm-6">
+				<h2>Bienvenido a</h2>
+				<h1><strong>Buscando Empleo</strong></h1>
+				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet. Dolore magna aliquam erat volutpat.</p>
+				<a href="#service" class="btn btn-default smoothScroll">Ingresa</a>
+			</div>
+		</div>
+	</div>
+</div>
