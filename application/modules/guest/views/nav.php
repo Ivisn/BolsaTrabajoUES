@@ -19,16 +19,14 @@
 				<li><a href="#service" class="smoothScroll">NOSOTROS</a></li>
 				<li><a href="#about" class="smoothScroll">EMPRESA</a></li>
 				<li><a href="#portfolio" class="smoothScroll">ASPIRANTE</a></li>
-				<li><a href="#" id="loginform" class="smoothScroll">USUARIO </a></li>
+				<li><a href="#" id="loginform" class="smoothScroll">USUARIO</a></li>
 				    <div class="login">
 				      <div class="arrow-up"></div>
 				      <div class="formholder">
 				        <div class="randompad">
 				           <fieldset>
-				           <li class="smoothScroll" style="text-align: center; !important"> <?=$usuario?></li>
-				             <a style="color: white" href="<?=base_url()?>auth/logout"><li>Cerrar sesión</li></a>
-				              <a style="color: white" href="<?=base_url()?>auth/forgot_password"><li>Cambiar contraseña</li></a>
-				              <a style="color: white" href="<?=base_url()?>auth/index"><li>Gestión de usuarios</li></a>
+				             <a href="<?=base_url()?>auth/logout"><li>Cerrar sesión</li></a>
+				              <a href="<?=base_url()?>auth/forgot_password"<li>Cambiar contraseña</li></a>
 				           </fieldset>
 				        </div>
 				      </div>

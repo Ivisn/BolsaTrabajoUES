@@ -47,14 +47,8 @@
 
 
 <!-- javascript js -->	
-<!--<script src="<?=base_url()?>public/js/jquery.js"></script>
-<script src="<?=base_url()?>public/js/bootstrap.min.js"></script>-->
-
-  <script src="<?php echo base_url('public/js/jquery/jquery-3.1.0.min.js')?>"></script>
-  <script src="<?php echo base_url('public/js/bootstrap.min.js')?>"></script>
-  <script src="<?php echo base_url('public/datatables/js/jquery.dataTables.min.js')?>"></script>
-  <script src="<?php echo base_url('public/datatables/js/dataTables.bootstrap.js')?>"></script>
- 	
+<script src="<?=base_url()?>public/js/jquery.js"></script>
+<script src="<?=base_url()?>public/js/bootstrap.min.js"></script>	
 <script src="<?=base_url()?>public/js/nivo-lightbox.min.js"></script>
 <script src="<?=base_url()?>public/js/smoothscroll.js"></script>
 <script src="<?=base_url()?>public/js/jquery.nav.js"></script>

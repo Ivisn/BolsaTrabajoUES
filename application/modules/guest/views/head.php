@@ -18,11 +18,15 @@ Template 2080 Minimax
 http://www.tooplate.com/view/2080-minimax
 
 -->
+	<script type="text/javascript" src="<?=base_url()?>public/js/jquery.js"></script>
+	<script type="text/javascript" src="<?=base_url()?>public/js/bootstrap.min.js"></script>
+	<!-- Tabla de perfiles -->
+	<link rel="stylesheet" href="<?=base_url()?>public/css/jquery.dataTables.min.css">
+	<!-- Calendarios -->
+	<link rel="stylesheet" href="<?=base_url()?>public/css/tcal.css"></script>
 	<!-- stylesheet css -->
 	<link rel="stylesheet" href="<?=base_url()?>public/css/bootstrap.min.css">
-    <link href="<?=base_url()?>public/datatables/css/dataTables.bootstrap.css" rel="stylesheet">
-    <link href="<?=base_url()?>public/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?=base_url()?>public/css/font-awesome.min.css">
+	<link rel="stylesheet" href="<?=base_url()?>public/css/font-awesome.min.css">
 	<link rel="stylesheet" href="<?=base_url()?>public/css/nivo-lightbox.css">
 	<link rel="stylesheet" href="<?=base_url()?>public/css/nivo_themes/default/default.html">
 	<link rel="stylesheet" href="<?=base_url()?>public/css/style.css">
@@ -30,4 +34,5 @@ http://www.tooplate.com/view/2080-minimax
 	<link rel="stylesheet" href="<?=base_url()?>public/css/style_float_list.css">
 	<!-- google web font css -->
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600,700' rel='stylesheet' type='text/css'>
+
 </head>
